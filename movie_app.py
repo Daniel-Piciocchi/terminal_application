@@ -65,7 +65,7 @@ def get_list_movies_above_rating():
 
 def recommend_movie_with_ratings_above():
     movies = get_list_movies_above_rating()
-    movies_length = len(movies)
+    movies_length = len(movies) -1
     random_number = random.randint(0, movies_length)
     random_movie = movies[random_number]
     print(random_movie)
@@ -95,14 +95,29 @@ def get_recommend_unseen_movie():
         for row in rows:
             seen_movies.append(row)
     while True:
-        movies_length = len(all_movies)
+        movies_length = len(all_movies) - 1
         random_number = random.randint(0, movies_length)
         random_movie = all_movies[random_number]
         if random_movie not in seen_movies:
             print(random_movie)   
             break         
 
+def recommend_movie_through_genre():
+    movies_genre = list()
+    genre = input("Which Genre Would You Like?")
+    with open("movie_list.csv", "r") as file:
+        rows = csv.reader(file)
+        for row in rows:
+            if genre == row[1]:
+                movies_genre.append(row)
+    movies_length = len(movies_genre) - 1
+    random_number = random.randint(0, movies_length)
+    random_movie = movies_genre[random_number]
+    print(random_movie)
+
     
+
+
     
             
 
@@ -116,6 +131,7 @@ print("4. List Movies With Ratings Above:")
 print("5. Recommend Movies With Ratings Above:")
 print("6. Mark Movie as Seen")
 print("7. Recommend Unseen Movie")
+print("8. Recommend Film Through Genre")
 
 user_input = input()
 
@@ -141,5 +157,9 @@ if user_input == "6":
 
 if user_input == "7":
     get_recommend_unseen_movie()
+
+if user_input == "8":
+    recommend_movie_through_genre()
+
 
 

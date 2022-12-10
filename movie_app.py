@@ -83,6 +83,31 @@ def mark_movie_as_seen():
         writer_object.writerow(seen_movie)
         file.close()
 
+def get_recommend_unseen_movie():
+    all_movies = list()
+    seen_movies = list()
+    with open("movie_list.csv", "r") as readFile:
+        rows = csv.reader(readFile)
+        for row in rows:
+            all_movies.append(row)
+    with open("movies_seen.csv", "r") as readFile:
+        rows = csv.reader(readFile)
+        for row in rows:
+            seen_movies.append(row)
+    while True:
+        movies_length = len(all_movies)
+        random_number = random.randint(0, movies_length)
+        random_movie = all_movies[random_number]
+        if random_movie not in seen_movies:
+            print(random_movie)   
+            break         
+
+    
+    
+            
+
+    
+
 print("Welcome to Foreign and Indie Films!")
 print("1. Create: add new movie")
 print("2. Delete: delete movie")
@@ -90,6 +115,7 @@ print("3. Update: update rating")
 print("4. List Movies With Ratings Above:")
 print("5. Recommend Movies With Ratings Above:")
 print("6. Mark Movie as Seen")
+print("7. Recommend Unseen Movie")
 
 user_input = input()
 
@@ -112,5 +138,8 @@ if user_input == "5":
 
 if user_input == "6":
     mark_movie_as_seen()
+
+if user_input == "7":
+    get_recommend_unseen_movie()
 
 

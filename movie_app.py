@@ -70,13 +70,18 @@ def recommend_movie_with_ratings_above():
     random_movie = movies[random_number]
     print(random_movie)
 
-
-
-    
-
-
-               
-
+def mark_movie_as_seen():
+    title = input("Which title have you seen?\n")
+    seen_movie = None
+    with open("movie_list.csv", "r") as file:
+        rows = csv.reader(file)
+        for row in rows:
+            if title == row[0]:
+                seen_movie = row
+    with open("movies_seen.csv", "a") as file:
+        writer_object = writer(file)
+        writer_object.writerow(seen_movie)
+        file.close()
 
 print("Welcome to Foreign and Indie Films!")
 print("1. Create: add new movie")
@@ -84,6 +89,7 @@ print("2. Delete: delete movie")
 print("3. Update: update rating")
 print("4. List Movies With Ratings Above:")
 print("5. Recommend Movies With Ratings Above:")
+print("6. Mark Movie as Seen")
 
 user_input = input()
 
@@ -104,5 +110,7 @@ if user_input == "4":
 if user_input == "5":
     recommend_movie_with_ratings_above()
 
+if user_input == "6":
+    mark_movie_as_seen()
 
 

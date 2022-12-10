@@ -2,6 +2,8 @@ from csv import writer
 
 import csv
 
+import random
+
 def add_movie():
     add_movie = []
     title = input("Please add a film\n")
@@ -23,7 +25,6 @@ def delete_movie():
     with open("movie_list.csv", "r") as readFile:
         rows = csv.reader(readFile)
         for row in rows:
-            # lines.append(row)
             if title != row[0]:
                 updated_movie_list.append(row)
     with open('movie_list.csv', 'w') as writeFile:
@@ -38,7 +39,6 @@ def update_rating():
     with open("movie_list.csv", "r") as readFile:
         rows = csv.reader(readFile)
         for row in rows:
-            # lines.append(row)
             if title == row[0]:
                 updated_row = [row[0], row[1] ,rating]
                 updated_movie_list.append(updated_row)
@@ -51,16 +51,29 @@ def update_rating():
         writer.writerows(updated_movie_list)
 
 
-def recommend_movies():
+def get_list_movies_above_rating():
     rating = input("Please select rating")
+    list_movies_above_rating = list()
     with open("movie_list.csv", "r") as readFile:
         rows = csv.reader(readFile)
         for row in rows:
             found_rating = row[2]
             split_string_list = found_rating.split("/")
-            # if rating == row[2]:
             if split_string_list[0] >= rating:
-                print(row)
+                list_movies_above_rating.append(row)
+    return list_movies_above_rating
+
+def recommend_movie_with_ratings_above():
+    movies = get_list_movies_above_rating()
+    movies_length = len(movies)
+    random_number = random.randint(0, movies_length)
+    random_movie = movies[random_number]
+    print(random_movie)
+
+
+
+    
+
 
                
 
@@ -69,7 +82,8 @@ print("Welcome to Foreign and Indie Films!")
 print("1. Create: add new movie")
 print("2. Delete: delete movie")
 print("3. Update: update rating")
-print("4. Recommend Movies With Ratings Above:")
+print("4. List Movies With Ratings Above:")
+print("5. Recommend Movies With Ratings Above:")
 
 user_input = input()
 
@@ -83,7 +97,12 @@ if user_input == "3":
     update_rating()
 
 if user_input == "4":
-    recommend_movies()
+    movies = get_list_movies_above_rating()
+    # TODO: loop n print
+    print(movies)
+
+if user_input == "5":
+    recommend_movie_with_ratings_above()
 
 
 

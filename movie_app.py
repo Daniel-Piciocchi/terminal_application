@@ -51,11 +51,25 @@ def update_rating():
         writer.writerows(updated_movie_list)
 
 
+def recommend_movies():
+    rating = input("Please select rating")
+    with open("movie_list.csv", "r") as readFile:
+        rows = csv.reader(readFile)
+        for row in rows:
+            found_rating = row[2]
+            split_string_list = found_rating.split("/")
+            # if rating == row[2]:
+            if split_string_list[0] >= rating:
+                print(row)
+
+               
+
 
 print("Welcome to Foreign and Indie Films!")
 print("1. Create: add new movie")
 print("2. Delete: delete movie")
 print("3. Update: update rating")
+print("4. Recommend Movies With Ratings Above:")
 
 user_input = input()
 
@@ -67,6 +81,9 @@ if user_input == "2":
 
 if user_input == "3":
     update_rating()
+
+if user_input == "4":
+    recommend_movies()
 
 
 

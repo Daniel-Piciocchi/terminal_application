@@ -115,6 +115,17 @@ def recommend_movie_through_genre():
     random_movie = movies_genre[random_number]
     print(random_movie)
 
+def get_recommended_random_movie():
+    all_movies = list()
+    with open("movie_list.csv", "r") as readFile:
+        rows = csv.reader(readFile)
+        for row in rows:
+            all_movies.append(row)
+    movies_length = len(all_movies) - 1
+    random_number = random.randint(0, movies_length)
+    random_movie = all_movies[random_number]
+    print(random_movie)
+
     
 
 
@@ -132,6 +143,7 @@ print("5. Recommend Movies With Ratings Above:")
 print("6. Mark Movie as Seen")
 print("7. Recommend Unseen Movie")
 print("8. Recommend Film Through Genre")
+print("9. Recommend Random Movie")
 
 user_input = input()
 
@@ -160,6 +172,9 @@ if user_input == "7":
 
 if user_input == "8":
     recommend_movie_through_genre()
+
+if user_input == "9":
+    get_recommended_random_movie()
 
 
 

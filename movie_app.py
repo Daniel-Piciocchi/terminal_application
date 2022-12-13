@@ -1,8 +1,7 @@
 from csv import writer
 
 import csv
-from functions import get_list_movies_above_rating, update_rating, recommend_movie_with_ratings_above, recommend_movie_through_genre
-
+from functions import get_list_movies_above_rating, update_rating, recommend_movie_with_ratings_above, recommend_movie_through_genre, delete_movie
 import random
 
 
@@ -19,21 +18,6 @@ def add_movie():
         writer_object = writer(file)
         writer_object.writerow(add_movie)
         file.close()
-
-
-def delete_movie():
-    title = input("Which title would you like to delete?\n")
-    updated_movie_list = list()
-
-    with open("movie_list.csv", "r") as readFile:
-        rows = csv.reader(readFile)
-        for row in rows:
-            if title != row[0]:
-                updated_movie_list.append(row)
-    with open('movie_list.csv', 'w') as writeFile:
-        writer = csv.writer(writeFile)
-        writer.writerows(updated_movie_list)
-
 
 def mark_movie_as_seen():
     title = input("Which title have you seen?\n")
@@ -108,7 +92,10 @@ if user_input == "1":
     add_movie()
 
 if user_input == "2":
-    delete_movie()
+    title = input("Which title would you like to delete?\n")
+    delete_movie("movie_list.csv", title)
+    result = delete_movie(title, "movie_list.csv")
+    print(result)
 
 if user_input == "3":
     title = input("Which title would you like to change the rating for?\n")

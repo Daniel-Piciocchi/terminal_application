@@ -1,9 +1,10 @@
 from csv import writer
 
 import csv
-from functions import get_list_movies_above_rating, update_rating, recommend_movie_with_ratings_above
+from functions import get_list_movies_above_rating, update_rating, recommend_movie_with_ratings_above, recommend_movie_through_genre
 
 import random
+
 
 def add_movie():
     add_movie = []
@@ -19,10 +20,11 @@ def add_movie():
         writer_object.writerow(add_movie)
         file.close()
 
+
 def delete_movie():
     title = input("Which title would you like to delete?\n")
     updated_movie_list = list()
-   
+
     with open("movie_list.csv", "r") as readFile:
         rows = csv.reader(readFile)
         for row in rows:
@@ -31,7 +33,6 @@ def delete_movie():
     with open('movie_list.csv', 'w') as writeFile:
         writer = csv.writer(writeFile)
         writer.writerows(updated_movie_list)
-
 
 
 def mark_movie_as_seen():
@@ -46,6 +47,7 @@ def mark_movie_as_seen():
         writer_object = writer(file)
         writer_object.writerow(seen_movie)
         file.close()
+
 
 def get_recommend_unseen_movie():
     all_movies = list()
@@ -63,21 +65,9 @@ def get_recommend_unseen_movie():
         random_number = random.randint(0, movies_length)
         random_movie = all_movies[random_number]
         if random_movie not in seen_movies:
-            print(random_movie)   
-            break         
+            print(random_movie)
+            break
 
-def recommend_movie_through_genre():
-    movies_genre = list()
-    genre = input("Which Genre Would You Like?")
-    with open("movie_list.csv", "r") as file:
-        rows = csv.reader(file)
-        for row in rows:
-            if genre == row[1]:
-                movies_genre.append(row)
-    movies_length = len(movies_genre) - 1
-    random_number = random.randint(0, movies_length)
-    random_movie = movies_genre[random_number]
-    print(random_movie)
 
 def get_recommended_random_movie():
     all_movies = list()
@@ -90,6 +80,7 @@ def get_recommended_random_movie():
     random_movie = all_movies[random_number]
     print(random_movie)
 
+
 def list_all_movies():
     all_movies = list()
     with open("movie_list.csv", "r") as readFile:
@@ -98,13 +89,6 @@ def list_all_movies():
             all_movies.append(row)
             print(all_movies)
 
-    
-
-
-    
-            
-
-    
 
 print("Welcome to Foreign and Indie Films!")
 print("1. Create: add new movie")
@@ -133,7 +117,7 @@ if user_input == "3":
 
 if user_input == "4":
     rating = input("Please select rating")
-    movies = get_list_movies_above_rating("movie_list.csv", rating) 
+    movies = get_list_movies_above_rating("movie_list.csv", rating)
     # TODO: loop n print
     print(movies)
 
@@ -141,7 +125,7 @@ if user_input == "5":
     rating = input("Please select rating")
     result = recommend_movie_with_ratings_above(rating, "movie_list.csv")
     print(result)
- 
+
 
 if user_input == "6":
     mark_movie_as_seen()
@@ -150,13 +134,12 @@ if user_input == "7":
     get_recommend_unseen_movie()
 
 if user_input == "8":
-    recommend_movie_through_genre()
+    movie_genre = input("Please select genre")
+    result = recommend_movie_through_genre("movie_list.csv", movie_genre)
+    print(result)
 
 if user_input == "9":
     get_recommended_random_movie()
 
 if user_input == "10":
     list_all_movies()
-
-
-

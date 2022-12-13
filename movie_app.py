@@ -1,6 +1,7 @@
 from csv import writer
 
 import csv
+from functions import get_list_movies_above_rating, update_rating, recommend_movie_with_ratings_above
 
 import random
 
@@ -31,44 +32,7 @@ def delete_movie():
         writer = csv.writer(writeFile)
         writer.writerows(updated_movie_list)
 
-def update_rating():
-    title = input("Which title would you like to change the rating for?\n")
-    rating = input("What is your new rating?")
-    updated_movie_list = list()
-   
-    with open("movie_list.csv", "r") as readFile:
-        rows = csv.reader(readFile)
-        for row in rows:
-            if title == row[0]:
-                updated_row = [row[0], row[1] ,rating]
-                updated_movie_list.append(updated_row)
-            else:
-                updated_movie_list.append(row)
 
-                
-    with open('movie_list.csv', 'w') as writeFile:
-        writer = csv.writer(writeFile)
-        writer.writerows(updated_movie_list)
-
-
-def get_list_movies_above_rating():
-    rating = input("Please select rating")
-    list_movies_above_rating = list()
-    with open("movie_list.csv", "r") as readFile:
-        rows = csv.reader(readFile)
-        for row in rows:
-            found_rating = row[2]
-            split_string_list = found_rating.split("/")
-            if split_string_list[0] >= rating:
-                list_movies_above_rating.append(row)
-    return list_movies_above_rating
-
-def recommend_movie_with_ratings_above():
-    movies = get_list_movies_above_rating()
-    movies_length = len(movies) -1
-    random_number = random.randint(0, movies_length)
-    random_movie = movies[random_number]
-    print(random_movie)
 
 def mark_movie_as_seen():
     title = input("Which title have you seen?\n")
@@ -163,15 +127,21 @@ if user_input == "2":
     delete_movie()
 
 if user_input == "3":
-    update_rating()
+    title = input("Which title would you like to change the rating for?\n")
+    rating = input("What is your new rating?")
+    update_rating("movie_list.csv", title, rating)
 
 if user_input == "4":
-    movies = get_list_movies_above_rating()
+    rating = input("Please select rating")
+    movies = get_list_movies_above_rating("movie_list.csv", rating) 
     # TODO: loop n print
     print(movies)
 
 if user_input == "5":
-    recommend_movie_with_ratings_above()
+    rating = input("Please select rating")
+    result = recommend_movie_with_ratings_above(rating, "movie_list.csv")
+    print(result)
+ 
 
 if user_input == "6":
     mark_movie_as_seen()

@@ -1,23 +1,9 @@
 from csv import writer
 
 import csv
-from functions import get_list_movies_above_rating, update_rating, recommend_movie_with_ratings_above, recommend_movie_through_genre, delete_movie
+from functions import get_list_movies_above_rating, update_rating, recommend_movie_with_ratings_above, recommend_movie_through_genre, delete_movie, add_movie
 import random
 
-
-def add_movie():
-    add_movie = []
-    title = input("Please add a film\n")
-    add_movie.append(title)
-    genre = input("Please add a genre\n")
-    add_movie.append(genre)
-    rating = input("Please add a rating\n")
-    add_movie.append(rating)
-
-    with open("movie_list.csv", "a") as file:
-        writer_object = writer(file)
-        writer_object.writerow(add_movie)
-        file.close()
 
 def mark_movie_as_seen():
     title = input("Which title have you seen?\n")
@@ -89,7 +75,13 @@ print("10. List All Movies")
 user_input = input()
 
 if user_input == "1":
-    add_movie()
+    new_movie = []
+    title = input("Please add a film\n")
+    new_movie.append(title)
+    genre = input("Please add a genre\n")
+    new_movie.append(genre)
+    rating = input("Please add a rating\n")
+    new_movie.append(rating)
 
 if user_input == "2":
     title = input("Which title would you like to delete?\n")

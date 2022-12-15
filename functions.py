@@ -7,10 +7,9 @@ import random
 from termcolor import colored
 
 
-
 def get_recommended_random_movie(csv_file):
     all_movies = list()
-    with open(csv_file, "r") as readFile:
+    with open(csv_file, "r", encoding="utf-8-sig") as readFile:
         rows = csv.reader(readFile)
         for row in rows:
             all_movies.append(row)
@@ -18,6 +17,7 @@ def get_recommended_random_movie(csv_file):
     random_number = random.randint(0, movies_length)
     random_movie = all_movies[random_number]
     return random_movie
+
 
 def get_recommend_unseen_movie(csv_movie_list, csv_movie_seen):
     all_movies = list()
@@ -37,7 +37,7 @@ def get_recommend_unseen_movie(csv_movie_list, csv_movie_seen):
         if random_movie not in seen_movies:
             print(random_movie)
             break
-        
+
 
 def recommend_movie_with_ratings_above(rating, csv_file):
     movies = get_list_movies_above_rating(csv_file, rating)
@@ -45,6 +45,7 @@ def recommend_movie_with_ratings_above(rating, csv_file):
     random_number = random.randint(0, movies_length)
     random_movie = movies[random_number]
     return random_movie
+
 
 def recommend_movie_through_genre(csv_file, movie_genre):
     movies_genre = list()
@@ -58,9 +59,10 @@ def recommend_movie_through_genre(csv_file, movie_genre):
     random_movie = movies_genre[random_number]
     return random_movie
 
+
 def list_all_movies(csv_file):
     all_movies = list()
-    with open(csv_file, "r") as readFile:
+    with open(csv_file, "r", encoding="utf-8-sig") as readFile:
         rows = csv.reader(readFile)
         for row in rows:
             all_movies.append(row)
@@ -78,15 +80,17 @@ def get_list_movies_above_rating(csv_file, rating):
                 list_movies_above_rating.append(row)
     return list_movies_above_rating
 
+
 def add_movie(csv_file, new_movie):
     with open(csv_file, "a") as file:
         writer_object = writer(file)
         writer_object.writerow(new_movie)
         file.close()
 
+
 def delete_movie(csv_file, title):
     updated_movie_list = list()
-    
+
     with open(csv_file, "r") as readFile:
         rows = csv.reader(readFile)
         for row in rows:
@@ -96,6 +100,7 @@ def delete_movie(csv_file, title):
         writer = csv.writer(writeFile)
         writer.writerows(updated_movie_list)
     return updated_movie_list
+
 
 def update_rating(csv_file, title, rating):
     updated_movie_list = list()
@@ -114,6 +119,7 @@ def update_rating(csv_file, title, rating):
         writer.writerows(updated_movie_list)
 
     return updated_movie_list
+
 
 def mark_movie_as_seen(csv_movie_list, csv_movie_seen_list, title):
     seen_movie = None
@@ -134,20 +140,60 @@ def mark_movie_as_seen(csv_movie_list, csv_movie_seen_list, title):
 
 
 def main_menu():
-    print(colored("Main Menu\n", "red"))
-    print("1. Recommend")
-    print("2. List")
-    print("3. Modify")
-    print("4. Exit Program")
+    print(colored("Main Menu\n", "red", attrs=["bold", "underline"]))
+    print(colored("1. Recommend", "green"))
+    print(colored("2. List", "yellow"))
+    print(colored("3. Modify", "blue"))
+    print(colored("4. Exit Program", "magenta"))
 
 
 def get_main_menu_option():
-    main_menu()
-    print()
-    option = int(input("Please Select An Option: \n"))
-    return option
+    while True:
+        main_menu()
+        print()
+        option = input("Please Select An Option: \n")
+        try:
+            option_as_number = int(option)
+            return option_as_number
+        except:
+            print("Option Invalid, Please Select Number from 1 - 4\n")
 
 
+def recommend_movie_menu():
+    print(colored("\nRecommend:\n", "green", attrs=["bold", "underline"]))
 
-
-
+    print("1. Random Film")
+    print("2. Unseen Film")
+    print("3. Film With Ratings Above: ")
+    print("4. Film Through Genre")
+    print("5. Go Back To Main Menu")
+    user_input = input()
+    if user_input == "1":
+        print()
+        result = get_recommended_random_movie("movie_list.csv")
+        print(result)
+        return 1
+    elif user_input == "2":
+        print()
+        get_recommend_unseen_movie("movie_list.csv", "movies_seen.csv")
+        return 1
+    elif user_input == "3":
+        rating = input("Please select rating: ")
+        print()
+        result = recommend_movie_with_ratings_above(
+            rating, "movie_list.csv")
+        print(result)
+        return 1
+    elif user_input == "4":
+        movie_genre = input("Please select genre: ")
+        print()
+        result = recommend_movie_through_genre(
+            "movie_list.csv", movie_genre)
+        print(result)
+        return 1
+    elif user_input == "5":
+        print()
+        return get_main_menu_option()
+    else:
+        print("Invalid Option")
+        return 1

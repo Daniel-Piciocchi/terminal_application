@@ -3,21 +3,20 @@ from functions import get_list_movies_above_rating, update_rating, recommend_mov
 
 import csv
 
-
 class Test_Movie(unittest.TestCase):
-    # def test_get_list_movies_above_rating(self):
-    #     resultOne = get_list_movies_above_rating("test_movie_data.csv", "4")
-    #     resultTwo = get_list_movies_above_rating("test_movie_data.csv", "5")
-    #     resultThree = get_list_movies_above_rating("test_movie_data.csv", "2.5")
+    def test_get_list_movies_above_rating(self):
+        resultOne = get_list_movies_above_rating("test_movie_data.csv", "4")
+        resultTwo = get_list_movies_above_rating("test_movie_data.csv", "5")
+        resultThree = get_list_movies_above_rating("test_movie_data.csv", "2.5")
 
-    #     expectedOne = list([["Armour", "Romance", "4/5"], ["Blue Is The Warmest Colour", "Romance", "5/5"]])
-    #     expectedTwo = list([["Blue Is The Warmest Colour", "Romance", "5/5"]])
-    #     expectedThree = list([["Armour", "Romance", "4/5"], ["Blue Is The Warmest Colour", "Romance", "5/5"], ["Flee","Animation","4/5"]])
+        expectedOne = list([["Armour", "Romance", "4/5"], ["Blue Is The Warmest Colour", "Romance", "5/5"], ["Flee","Animation","4/5"]])
+        expectedTwo = list([["Blue Is The Warmest Colour", "Romance", "5/5"]])
+        expectedThree = list([["Armour", "Romance", "4/5"], ["Blue Is The Warmest Colour", "Romance", "5/5"], ["Flee","Animation","4/5"]])
 
-    #     self.assertEqual(expectedOne, resultOne)
-    #     self.assertEqual(expectedTwo, resultTwo)
-    #     self.assertEqual(expectedThree, resultThree)
-    #     pass
+        self.assertEqual(expectedOne, resultOne)
+        self.assertEqual(expectedTwo, resultTwo)
+        self.assertEqual(expectedThree, resultThree)
+        pass
     # def test_update_rating(self):
     #     updated_movies = update_rating("test_movie_data.csv", "Flee", "4/5")
     #     expectedResult = list([["Armour", "Romance", "4/5"], ["Blue Is The Warmest Colour", "Romance", "5/5"], ["Flee","Animation","4/5"]])
@@ -40,20 +39,28 @@ class Test_Movie(unittest.TestCase):
         self.assertEqual(expectedOne, resultOne)
 
     def test_delete_movie(self):
-        resultOne = delete_movie("test_movie_data.csv", "Flee")
+        resultOne = delete_movie("test_delete_movie.csv", "Monk")
         expectedOne = [["Armour", "Romance", "4/5"], ["Blue Is The Warmest Colour",
-                                                      "Romance", "5/5"], ["Monk", "Animation", "2/5"]]
+                                                      "Romance", "5/5"]]
+        resultTwo = delete_movie("test_delete_movie.csv", "Armour")
+        expectedTwo = [["Blue Is The Warmest Colour",
+                                                      "Romance", "5/5"]]
 
         self.assertEqual(expectedOne, resultOne)
+        self.assertEqual(expectedTwo, resultTwo)
 
     def test_add_movie(self):
         add_movie("test_add_movie.csv", ['new title', 'genre', '4/5'])
         expectedOne = ['new title', 'genre', '4/5']
+        lastItem = None
 
         with open("test_add_movie.csv", "r") as readFile:
             rows = csv.reader(readFile)
             for row in rows:
-                self.assertEquals(row, expectedOne)
+                lastItem = row
+        
+        self.assertEqual(lastItem, expectedOne)
+
 
 print(__name__)
 if __name__ == "__main__":

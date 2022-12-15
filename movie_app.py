@@ -1,124 +1,123 @@
 from csv import writer
 
 import csv
-from functions import get_list_movies_above_rating, update_rating, recommend_movie_with_ratings_above, recommend_movie_through_genre, delete_movie, add_movie
+from functions import get_list_movies_above_rating, get_main_menu_option, update_rating, recommend_movie_with_ratings_above, recommend_movie_through_genre, delete_movie, add_movie, mark_movie_as_seen, get_recommend_unseen_movie, list_all_movies, get_recommended_random_movie
 import random
+import sys
+import time
+
+from termcolor import colored
 
 
-def mark_movie_as_seen():
-    title = input("Which title have you seen?\n")
-    seen_movie = None
-    with open("movie_list.csv", "r") as file:
-        rows = csv.reader(file)
-        for row in rows:
-            if title == row[0]:
-                seen_movie = row
-    with open("movies_seen.csv", "a") as file:
-        writer_object = writer(file)
-        writer_object.writerow(seen_movie)
-        file.close()
+f = open('bat.txt', 'r')
 
 
-def get_recommend_unseen_movie():
-    all_movies = list()
-    seen_movies = list()
-    with open("movie_list.csv", "r") as readFile:
-        rows = csv.reader(readFile)
-        for row in rows:
-            all_movies.append(row)
-    with open("movies_seen.csv", "r") as readFile:
-        rows = csv.reader(readFile)
-        for row in rows:
-            seen_movies.append(row)
-    while True:
-        movies_length = len(all_movies) - 1
-        random_number = random.randint(0, movies_length)
-        random_movie = all_movies[random_number]
-        if random_movie not in seen_movies:
-            print(random_movie)
+def print_ascii(fn):
+    f = open(fn, 'r')
+    print(''.join([line for line in f]))
+
+
+print_ascii('bat.txt')
+print()
+
+option = get_main_menu_option()
+
+while option != 0:
+    if option == 1:
+        print(colored('\nRecommend\n', 'red'))
+
+        print("1. Random Film")
+        print("2. Unseen Film")
+        print("3. Film With Ratings Above: ")
+        print("4. Film Through Genre")
+        print("5. Go Back To Main Menu")
+        user_input = input()
+        if user_input == "1":
+            print()
+            result = get_recommended_random_movie("movie_list.csv")
+            print(result)
+        elif user_input == "2":
+            print()
+            get_recommend_unseen_movie("movie_list.csv", "movies_seen.csv")
+        elif user_input == "3":
+            rating = input("Please select rating ")
+            result = recommend_movie_with_ratings_above(
+                rating, "movie_list.csv")
+            print(result)
             break
+        elif user_input == "4":
+            movie_genre = input("Please select genre ")
+            result = recommend_movie_through_genre(
+                "movie_list.csv", movie_genre)
+            print(result)
+        elif user_input == "5":
+            print()
+            option = get_main_menu_option()
+        else:
+            print("Invalid Option")
 
-
-def get_recommended_random_movie():
-    all_movies = list()
-    with open("movie_list.csv", "r") as readFile:
-        rows = csv.reader(readFile)
-        for row in rows:
-            all_movies.append(row)
-    movies_length = len(all_movies) - 1
-    random_number = random.randint(0, movies_length)
-    random_movie = all_movies[random_number]
-    print(random_movie)
-
-
-def list_all_movies():
-    all_movies = list()
-    with open("movie_list.csv", "r") as readFile:
-        rows = csv.reader(readFile)
-        for row in rows:
-            all_movies.append(row)
-            print(all_movies)
-
-
-print("Welcome to Foreign and Indie Films!")
-print("1. Create: add new movie")
-print("2. Delete: delete movie")
-print("3. Update: update rating")
-print("4. List Movies With Ratings Above:")
-print("5. Recommend Movies With Ratings Above:")
-print("6. Mark Movie as Seen")
-print("7. Recommend Unseen Movie")
-print("8. Recommend Film Through Genre")
-print("9. Recommend Random Movie")
-print("10. List All Movies")
-
-user_input = input()
-
-if user_input == "1":
-    new_movie = []
-    title = input("Please add a film\n")
-    new_movie.append(title)
-    genre = input("Please add a genre\n")
-    new_movie.append(genre)
-    rating = input("Please add a rating\n")
-    new_movie.append(rating)
-
-if user_input == "2":
-    title = input("Which title would you like to delete?\n")
-    delete_movie("movie_list.csv", title)
-    result = delete_movie(title, "movie_list.csv")
-    print(result)
-
-if user_input == "3":
-    title = input("Which title would you like to change the rating for?\n")
-    rating = input("What is your new rating?")
-    update_rating("movie_list.csv", title, rating)
-
-if user_input == "4":
-    rating = input("Please select rating")
-    movies = get_list_movies_above_rating("movie_list.csv", rating)
-    # TODO: loop n print
-    print(movies)
-
-if user_input == "5":
-    rating = input("Please select rating")
-    result = recommend_movie_with_ratings_above(rating, "movie_list.csv")
-    print(result)
-
-
-if user_input == "6":
-    mark_movie_as_seen()
-
-if user_input == "7":
-    get_recommend_unseen_movie()
-
-if user_input == "8":
-    movie_genre = input("Please select genre")
-    result = recommend_movie_through_genre("movie_list.csv", movie_genre)
-    print(result)
-
-if user_input == "9":
-    get_recommended_random_movie()
-
-if user_input == "10":
-    list_all_movies()
+    elif option == 2:
+        print("\nList:\n")
+        print("1. All Films")
+        print("2. Films With Ratings Above: ")
+        print("3. Go Back To Main Menu: \n")
+        user_input = input()
+        if user_input == "1":
+            movies = list_all_movies("movie_list.csv")
+            for movie in movies:
+                print(movie)
+            print()
+        if user_input == "2":
+            rating = input("Please select rating ")
+            movies = get_list_movies_above_rating("movie_list.csv", rating)
+            for movie in movies:
+                print(movie)
+            print()
+        if user_input == "3":
+            print()
+            option = get_main_menu_option()
+    elif option == 3:
+        print("\nModify:\n")
+        print("1. Add New Film")
+        print("2. Delete Film")
+        print("3. Update Rating")
+        print("4. Mark Film As Seen")
+        print("5. Go Back To Main Menu")
+        user_input = input()
+        if user_input == "1":
+            new_movie = []
+            title = input("Please add a title\n")
+            new_movie.append(title)
+            genre = input("Please add a genre\n")
+            new_movie.append(genre)
+            rating = input("Please add a rating\n")
+            new_movie.append(rating)
+            add_movie("movie_list.csv", new_movie)
+            print("Movie Added!")
+        if user_input == "2":
+            title = input("Which title would you like to delete?\n")
+            delete_movie("movie_list.csv", title)
+            print("Film Deleted!")
+        if user_input == "3":
+            title = input(
+                "Which title would you like to change the rating for?\n")
+            rating = input("What is your new rating?")
+            update_rating("movie_list.csv", title, rating)
+        if user_input == "4":
+            title = input("Which title have you seen?\n")
+            result = mark_movie_as_seen(
+                "movie_list.csv", "movies_seen.csv", title)
+            if result == True:
+                print("Successfully Added!")
+            else:
+                print("Film Does Not Exist!")
+        if user_input == "5":
+            print()
+            option = get_main_menu_option()
+    elif option == 4:
+        print("\n See You Next Time!")
+        time.sleep(1)
+        sys.exit()
+        break
+    else:
+        print("Invalid Option")

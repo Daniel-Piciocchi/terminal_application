@@ -41,6 +41,9 @@ def get_recommend_unseen_movie(csv_movie_list, csv_movie_seen):
 
 def recommend_movie_with_ratings_above(rating, csv_file):
     movies = get_list_movies_above_rating(csv_file, rating)
+    if movies == None:
+        return
+
     movies_length = len(movies) - 1
     random_number = random.randint(0, movies_length)
     random_movie = movies[random_number]
@@ -54,10 +57,14 @@ def recommend_movie_through_genre(csv_file, movie_genre):
         for row in rows:
             if movie_genre == row[1]:
                 movies_genre.append(row)
-    movies_length = len(movies_genre) - 1
-    random_number = random.randint(0, movies_length)
-    random_movie = movies_genre[random_number]
-    return random_movie
+    if len(movies_genre) == 0:
+        print("we dont have any of that genre round these parts of town")
+    else:
+
+        movies_length = len(movies_genre) - 1
+        random_number = random.randint(0, movies_length)
+        random_movie = movies_genre[random_number]
+        return random_movie
 
 
 def list_all_movies(csv_file):
@@ -71,6 +78,14 @@ def list_all_movies(csv_file):
 
 def get_list_movies_above_rating(csv_file, rating):
     list_movies_above_rating = list()
+    try:
+        rating_as_number = float(rating)
+        if rating_as_number > 5:
+            print("please provide number between 0-5")
+            return
+    except:
+        print("Please provide a number as input")
+        return
     with open(csv_file, "r") as readFile:
         rows = csv.reader(readFile)
         for row in rows:
@@ -90,20 +105,28 @@ def add_movie(csv_file, new_movie):
 
 def delete_movie(csv_file, title):
     updated_movie_list = list()
+    did_delete_movie = False
 
     with open(csv_file, "r") as readFile:
         rows = csv.reader(readFile)
         for row in rows:
             if title != row[0]:
                 updated_movie_list.append(row)
+            else:
+                did_delete_movie = True
+
     with open(csv_file, 'w') as writeFile:
         writer = csv.writer(writeFile)
         writer.writerows(updated_movie_list)
-    return updated_movie_list
-
+    if did_delete_movie == False:
+        print("aint no movie dleeted")
+    else:
+        print("Film Deleted!")
+        return updated_movie_list
 
 def update_rating(csv_file, title, rating):
     updated_movie_list = list()
+    did_find_movie = False
 
     with open(csv_file, "r") as readFile:
         rows = csv.reader(readFile)
@@ -111,12 +134,17 @@ def update_rating(csv_file, title, rating):
             if title == row[0]:
                 updated_row = [row[0], row[1], rating]
                 updated_movie_list.append(updated_row)
+                did_find_movie = True
             else:
                 updated_movie_list.append(row)
 
-    with open(csv_file, 'w') as writeFile:
+    with open(csv_file, "w") as writeFile:
         writer = csv.writer(writeFile)
         writer.writerows(updated_movie_list)
+
+    if did_find_movie == False:
+        print()
+        print("Film Not In Data Base. Please Try Again")
 
     return updated_movie_list
 
@@ -181,22 +209,25 @@ def recommend_movie_menu():
         print()
         result = recommend_movie_with_ratings_above(
             rating, "movie_list.csv")
-        print(result)
+        if result != None:
+            print(result)
         return 1
     elif user_input == "4":
         movie_genre = input("Please select genre: ")
         print()
         result = recommend_movie_through_genre(
             "movie_list.csv", movie_genre)
-        print(result)
+        if result != None:
+            print(result)
         return 1
     elif user_input == "5":
         print()
         return get_main_menu_option()
     else:
-        print("Invalid Option")
+        print(colored("\nInvalid Option", "red", attrs=["bold"]))
         return 1
-    
+
+
 def list_movie_menu():
     print(colored("\nList\n", "yellow", attrs=["bold", "underline"]))
     print("1. All Films")
@@ -208,15 +239,22 @@ def list_movie_menu():
         for movie in movies:
             print(movie)
         print()
+        return 2
     if user_input == "2":
         rating = input("Please select rating: ")
         movies = get_list_movies_above_rating("movie_list.csv", rating)
-        for movie in movies:
-            print(movie)
+        if movies != None:
+            for movie in movies:
+                print(movie)
         print()
+        return 2
     if user_input == "3":
         print()
         return get_main_menu_option()
+    else:
+        print(colored("\nInvalid Option", "red", attrs=["bold"]))
+        return 2
+
 
 def modify_movie_menu():
     print(colored("\nModify\n", "blue", attrs=["bold", "underline"]))
@@ -233,18 +271,29 @@ def modify_movie_menu():
         genre = input("Please add a genre:\n")
         new_movie.append(genre)
         rating = input("Please add a rating:\n")
-        new_movie.append(rating)
+        formatted_rating = rating + '/5'
+        new_movie.append(formatted_rating)
         add_movie("movie_list.csv", new_movie)
         print("Movie Added!")
+        return 3
     if user_input == "2":
         title = input("Which title would you like to delete?\n")
         delete_movie("movie_list.csv", title)
-        print("Film Deleted!")
+        return 3
     if user_input == "3":
         title = input(
             "Which title would you like to change the rating for?\n")
         rating = input("What is your new rating?")
-        update_rating("movie_list.csv", title, rating)
+        try:
+            rating_as_number = float(rating)
+            if rating_as_number > 5:
+                print("please provide number between 0-5")
+            return
+        except:
+            print("Please provide a number as input")
+        formatted_rating = rating + '/5'
+        update_rating("movie_list.csv", title, formatted_rating)
+        return 3
     if user_input == "4":
         title = input("Which title have you seen?\n")
         result = mark_movie_as_seen(
@@ -253,3 +302,11 @@ def modify_movie_menu():
             print("Successfully Added!")
         else:
             print("\nFilm Does Not Exist!")
+        return 3
+    if user_input == "5":
+        print()
+        return get_main_menu_option()
+
+    else:
+        print(colored("\nInvalid Option", "red", attrs=["bold"]))
+        return 3

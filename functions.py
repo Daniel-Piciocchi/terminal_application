@@ -71,8 +71,8 @@ def recommend_movie_through_genre(csv_file, movie_genre):
     if len(movies_genre) == 0:
         print(colored(
             "\nThat Genre Does Not Exist!", "red", attrs=["bold"]))
-        print(colored("\nPlease select from:" , "green", attrs=["bold"]))
-        print("\nAnimation, Comedy, Crime, Documentary, Drama, Romance, Thriller, Sci-Fi")
+        print(colored("\nPlease select from:", "green", attrs=["bold"]))
+        print("\nAnimation, Comedy, Crime, Documentary, Drama, Romance, Thriller, Sci-Fi\n")
     else:
 
         movies_length = len(movies_genre) - 1
@@ -95,10 +95,10 @@ def get_list_movies_above_rating(csv_file, rating):
     try:
         rating_as_number = float(rating)
         if rating_as_number > 5:
-            print("\nPlease Provide A Number Between: 0-5")
+            print("\nOption Invalid! Please provide a number between: 0-5\n")
             return
     except:
-        print("\nPlease Provide A Number As Input")
+        print("\nPlease provide a number as input\n")
         return
     with open(csv_file, "r") as readFile:
         rows = csv.reader(readFile)
@@ -161,7 +161,7 @@ def update_rating(csv_file, title, rating):
     if did_find_movie == False:
         print()
         print("\nFilm Not In Database. Please Try Again")
-    else: 
+    else:
         print("\nFilm Rating Updated!")
 
     return updated_movie_list
@@ -247,7 +247,7 @@ def recommend_movie_menu():
         print()
         return get_main_menu_option()
     else:
-        print(colored("\nInvalid Option", "red", attrs=["bold"]))
+        print(colored("\nInvalid Option\n", "red", attrs=["bold"]))
         return 1
 
 
@@ -280,7 +280,7 @@ def list_movie_menu():
 
 
 def modify_movie_menu():
-    print(colored("\nModify\n", "blue", attrs=["bold", "underline"]))
+    print(colored("Modify\n", "blue", attrs=["bold", "underline"]))
     print("1. Add New Film")
     print("2. Delete Film")
     print("3. Update Rating")
@@ -310,7 +310,7 @@ def modify_movie_menu():
         try:
             rating_as_number = float(rating)
             if rating_as_number > 5:
-                print("please provide number between 0-5")
+                print("please provide number between 0-5\n")
                 return
         except:
             print("Please provide a number as input")

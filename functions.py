@@ -32,6 +32,22 @@ def get_recommended_random_movie(csv_file):
     random_movie = all_movies[random_number]
     return Movie(random_movie[0], random_movie[1], random_movie[2])
 
+def mark_movie_as_seen(csv_movie_list, csv_movie_seen_list, title):
+    seen_movie = None
+
+    with open(csv_movie_list, "r") as file:
+        rows = csv.reader(file)
+        for row in rows:
+            if title.lower() == row[0].lower():
+                seen_movie = row
+    if seen_movie == None:
+        return False
+
+    with open(csv_movie_seen_list, "a") as file:
+        writer_object = writer(file)
+        writer_object.writerow(seen_movie)
+        file.close()
+    return True
 
 def get_recommend_unseen_movie(csv_movie_list, csv_movie_seen):
     all_movies = list()
@@ -61,7 +77,6 @@ def recommend_movie_with_ratings_above(rating, csv_file):
     movies_length = len(movies) - 1
     random_number = random.randint(0, movies_length)
     random_movie = movies[random_number]
-    # print(random_movie)
     return random_movie
 
 
@@ -180,24 +195,6 @@ def update_rating(csv_file, title, rating):
     return updated_movie_list
 
 
-def mark_movie_as_seen(csv_movie_list, csv_movie_seen_list, title):
-    seen_movie = None
-
-    with open(csv_movie_list, "r") as file:
-        rows = csv.reader(file)
-        for row in rows:
-            if title.lower() == row[0].lower():
-                seen_movie = row
-    if seen_movie == None:
-        return False
-
-    with open(csv_movie_seen_list, "a") as file:
-        writer_object = writer(file)
-        writer_object.writerow(seen_movie)
-        file.close()
-    return True
-
-
 def main_menu():
     print(colored("Main Menu\n", "red", attrs=["bold", "underline"]))
     print(colored("1. Recommend", "green"))
@@ -308,8 +305,8 @@ def modify_movie_menu():
         formatted_rating = rating + '/5'
         new_movie.append(formatted_rating)
         add_movie("movie_list.csv", new_movie)
-        print(colored("\nMovie Added:\n", "green", attrs=["bold"]))
-        print(new_movie)
+        print(colored("\nMovie Added:", "green", attrs=["bold"]))
+        print(Movie(new_movie[0], new_movie[1], new_movie[2]))
         print()
         return 3
     if user_input == "2":
@@ -341,7 +338,7 @@ def modify_movie_menu():
         if result == True:
             print()
             print(title, colored(
-                "Successfully Added To Films Seen List!\n", "green", attrs=["bold"]))
+                "\n\nSuccessfully Added " + title + " To Films Seen List!\n", "green", attrs=["bold"]))
         else:
             print(colored("\nFilm Does Not Exist!", "red", attrs=["bold"]))
             print(colored("\nPlease select a film from the database\n", "cyan"))

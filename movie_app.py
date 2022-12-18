@@ -5,13 +5,9 @@ import time
 
 from termcolor import colored
 
-
-f = open('title.txt', 'r')
-
-
 def print_ascii(fn):
-    f = open(fn, 'r')
-    print(''.join([line for line in f]))
+    textWrapper = open(fn, 'r')
+    print(''.join([line for line in textWrapper]))
 
 
 print_ascii('title.txt')
@@ -19,7 +15,7 @@ print()
 
 option = get_main_menu_option()
 
-while option != 0:
+while True:
     if option == 1:
         option = recommend_movie_menu()
     elif option == 2:

@@ -16,6 +16,10 @@ class Movie:
     def __str__(self):
         return colored("\nTitle: ",  "red", attrs=["bold"]) + self.title + "\n" + colored("Genre: ", "green", attrs=["bold"]) + self.genre + "\n" + colored("Rating: ", "blue", attrs=["bold"]) + self.rating
 
+    def __eq__(self, other):
+        if isinstance(self, other.__class__):
+            return self.title == other.title and self.genre == other.genre and self.rating == other.rating
+        return False
 
 def get_recommended_random_movie(csv_file):
     all_movies = list()
@@ -63,7 +67,7 @@ def recommend_movie_with_ratings_above(rating, csv_file):
 
 def recommend_movie_through_genre(csv_file, movie_genre):
     movies_genre = list()
-    with open(csv_file, "r") as file:
+    with open(csv_file, "r", encoding="utf-8-sig") as file:
         rows = csv.reader(file)
         for row in rows:
             if movie_genre == row[1]:
@@ -102,7 +106,7 @@ def get_list_movies_above_rating(csv_file, rating):
         print(colored("\nInvalid Input!", "red", attrs=["bold"]))
         print(colored("\nPlease provide a number as input\n", "cyan"))
         return
-    with open(csv_file, "r") as readFile:
+    with open(csv_file, "r", encoding="utf-8-sig") as readFile:
         rows = csv.reader(readFile)
         for row in rows:
             found_rating = row[2]
@@ -114,7 +118,7 @@ def get_list_movies_above_rating(csv_file, rating):
 
 
 def add_movie(csv_file, new_movie):
-    with open(csv_file, "a") as file:
+    with open(csv_file, "a", encoding="utf-8-sig") as file:
         writer_object = writer(file)
         writer_object.writerow(new_movie)
         file.close()
@@ -124,15 +128,15 @@ def delete_movie(csv_file, title):
     updated_movie_list = list()
     did_delete_movie = False
 
-    with open(csv_file, "r") as readFile:
+    with open(csv_file, "r", encoding="utf-8-sig") as readFile:
         rows = csv.reader(readFile)
         for row in rows:
-            if title != row[0]:
+            if title.lower() != row[0].lower():
                 updated_movie_list.append(row)
             else:
                 did_delete_movie = True
 
-    with open(csv_file, 'w') as writeFile:
+    with open(csv_file, 'w', encoding="utf-8-sig") as writeFile:
         writer = csv.writer(writeFile)
         writer.writerows(updated_movie_list)
     if did_delete_movie == False:
@@ -150,17 +154,17 @@ def update_rating(csv_file, title, rating):
     updated_movie_list = list()
     did_find_movie = False
 
-    with open(csv_file, "r") as readFile:
+    with open(csv_file, "r", encoding="utf-8-sig") as readFile:
         rows = csv.reader(readFile)
         for row in rows:
-            if title == row[0]:
+            if title.lower() == row[0].lower():
                 updated_row = [row[0], row[1], rating]
                 updated_movie_list.append(updated_row)
                 did_find_movie = True
             else:
                 updated_movie_list.append(row)
 
-    with open(csv_file, "w") as writeFile:
+    with open(csv_file, "w", encoding="utf-8-sig") as writeFile:
         writer = csv.writer(writeFile)
         writer.writerows(updated_movie_list)
 
@@ -182,7 +186,7 @@ def mark_movie_as_seen(csv_movie_list, csv_movie_seen_list, title):
     with open(csv_movie_list, "r") as file:
         rows = csv.reader(file)
         for row in rows:
-            if title == row[0]:
+            if title.lower() == row[0].lower():
                 seen_movie = row
     if seen_movie == None:
         return False

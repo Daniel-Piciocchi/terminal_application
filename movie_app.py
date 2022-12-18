@@ -9,7 +9,7 @@ import time
 from termcolor import colored
 
 
-f = open('bat.txt', 'r')
+f = open('title.txt', 'r')
 
 
 def print_ascii(fn):
@@ -17,7 +17,7 @@ def print_ascii(fn):
     print(''.join([line for line in f]))
 
 
-print_ascii('bat.txt')
+print_ascii('title.txt')
 print()
 
 option = get_main_menu_option()
@@ -30,12 +30,13 @@ while option != 0:
     elif option == 3:
             option = modify_movie_menu()
     elif option == 4:
-        print(colored("\nSee You Next Time!", "cyan"))
+        print(colored("\nSee You Next Time!\n", "cyan", attrs=["bold"]))
         time.sleep(1)
         sys.exit()
         break
     else: 
-        print(colored("\nInvalid Option: Please Try Again", "red"))
+        print(colored("Invalid Option!\n", "red", attrs=["bold"]))
+        print(colored("Please Select A Number from 1 - 4", "cyan"))
         print()
         option = get_main_menu_option()
         
